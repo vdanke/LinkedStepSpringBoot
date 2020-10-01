@@ -2,10 +2,12 @@ package org.step.linked.step.repository;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.step.linked.step.entity.User;
 
 import java.util.List;
@@ -16,11 +18,11 @@ import java.util.Optional;
 а так же конфигурируем InMemory DB
 Используется H2 так как зависимость находится в classpath
  */
+@ExtendWith(SpringExtension.class)
 @DataJpaTest
-@Sql(value = "classpath:db/test/init_user.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(value = "classpath:db/test/delete_user.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 @TestPropertySource(locations = {"classpath:application-test.properties"})
-//@ActiveProfiles("test")
+@Sql(value = {"classpath:db/test/users/init_user_test.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(value = {"classpath:db/test/users/delete_user_test.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class UserRepositoryTest {
 
     private static final Long USER_ID_TEST = 1L;
@@ -46,14 +48,15 @@ public class UserRepositoryTest {
 
     @Test
     public void shouldSaveUser() {
-        final User user = new User(4L, "second", "second");
+        final long id = 99L;
+        final User user = new User(id, "fourth", "fourth");
 
         userRepository.saveAndFlush(user);
 
-        Optional<User> byId = userRepository.findById(4L);
+        Optional<User> byId = userRepository.findById(id);
 
         Assertions.assertTrue(byId.isPresent());
-        Assertions.assertEquals(4L, byId.get().getId());
+        Assertions.assertEquals(id, byId.get().getId());
     }
 
     @Test
