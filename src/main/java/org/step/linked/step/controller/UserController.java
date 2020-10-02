@@ -42,7 +42,11 @@ public class UserController {
 
     @PostMapping
     public RegistrationResponse saveNewUser(@RequestBody RegistrationRequest request) {
-        User user = new User(null, request.getUsername(), request.getPassword(), request.getAge());
+        User user = User.builder()
+                .username(request.getUsername())
+                .password(request.getPassword())
+                .age(request.getAge())
+                .build();
 
         User savedUser = userCrudService.save(user);
 
@@ -72,7 +76,7 @@ public class UserController {
     public UserDTO updateUser(@PathVariable(name = "id") String id,
                               @RequestBody UpdateRequest request) {
         final long userId = Long.parseLong(id);
-        User toUpdate = new User(null, request.getUsername(), null, null);
+        User toUpdate = User.builder().username(request.getUsername()).build();
         User user = userCrudService.update(userId, toUpdate);
         return UserDTO.toDTO(user);
     }

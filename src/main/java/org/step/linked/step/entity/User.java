@@ -32,19 +32,15 @@ public class User {
     public User() {
     }
 
-    public User(Long id, String username, String password, Integer age) {
+    private User(Long id, String username, String password, Integer age) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.age = age;
     }
 
-    public Integer getAge() {
-        return age;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
+    public static UserBuilder builder() {
+        return new UserBuilder();
     }
 
     public Long getId() {
@@ -69,5 +65,47 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public static class UserBuilder {
+        private Long id;
+        private String username;
+        private String password;
+        private Integer age;
+
+        private UserBuilder() {
+        }
+
+        public UserBuilder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public UserBuilder username(String username) {
+            this.username = username;
+            return this;
+        }
+
+        public UserBuilder password(String password) {
+            this.password = password;
+            return this;
+        }
+
+        public UserBuilder age(Integer age) {
+            this.age = age;
+            return this;
+        }
+
+        public User build() {
+            return new User(id, username, password, age);
+        }
     }
 }

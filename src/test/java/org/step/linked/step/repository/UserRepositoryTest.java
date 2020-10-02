@@ -26,6 +26,8 @@ import java.util.Optional;
 public class UserRepositoryTest {
 
     private static final Long USER_ID_TEST = 1L;
+    private static final Integer USER_AGE_TEST = 25;
+    private static final String USER_DATA_TEST = "fourth";
 
     @Autowired
     private UserRepository userRepository;
@@ -49,7 +51,12 @@ public class UserRepositoryTest {
     @Test
     public void shouldSaveUser() {
         final long id = 99L;
-        final User user = new User(id, "fourth", "fourth", 25);
+        final User user = User.builder()
+                .id(id)
+                .username(USER_DATA_TEST)
+                .password(USER_DATA_TEST)
+                .age(USER_AGE_TEST)
+                .build();
 
         userRepository.saveAndFlush(user);
 
@@ -72,7 +79,12 @@ public class UserRepositoryTest {
 
     @Test
     public void shouldDeleteUser() {
-        final User user = new User(USER_ID_TEST, "first", "first", 25);
+        final User user = User.builder()
+                .id(USER_ID_TEST)
+                .username(USER_DATA_TEST)
+                .password(USER_DATA_TEST)
+                .age(USER_AGE_TEST)
+                .build();
 
         userRepository.delete(user);
 

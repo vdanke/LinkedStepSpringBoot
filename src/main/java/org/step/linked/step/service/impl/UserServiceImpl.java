@@ -58,18 +58,10 @@ public class UserServiceImpl implements CrudService<User, Long> {
     @Override
     @Transactional
     public User update(Long aLong, User request) {
-//        User user = userRepository.findById(aLong)
-//                .orElseThrow(RuntimeException::new);
-//
-//        userRepository.updateUsername(request.getUsername(), aLong);
-//
-//        return user;
         User user = userRepository.findById(aLong)
                 .orElseThrow(RuntimeException::new);
 
         user.setUsername(request.getUsername());
-
-        userRepository.flush();
 
         return user;
     }
