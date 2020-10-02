@@ -1,4 +1,4 @@
-CREATE TABLE USERS (
+CREATE TABLE IF NOT EXISTS USERS (
     id int8 not null,
     username varchar(128) not null unique,
     password varchar(256) not null,

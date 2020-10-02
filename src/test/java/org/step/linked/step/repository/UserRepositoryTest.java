@@ -61,24 +61,24 @@ public class UserRepositoryTest {
 
     @Test
     public void shouldDeleteUserById() {
-        userRepository.deleteById(2L);
+        userRepository.deleteById(USER_ID_TEST);
 
         userRepository.flush();
 
-        Optional<User> byId = userRepository.findById(2L);
+        Optional<User> byId = userRepository.findById(USER_ID_TEST);
 
         Assertions.assertFalse(byId.isPresent());
     }
 
     @Test
     public void shouldDeleteUser() {
-        final User user = new User(2L, "second", "second");
+        final User user = new User(USER_ID_TEST, "first", "first");
 
         userRepository.delete(user);
 
         userRepository.flush();
 
-        Optional<User> byId = userRepository.findById(2L);
+        Optional<User> byId = userRepository.findById(USER_ID_TEST);
 
         Assertions.assertFalse(byId.isPresent());
     }
