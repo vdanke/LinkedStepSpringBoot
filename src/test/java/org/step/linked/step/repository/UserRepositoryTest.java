@@ -49,7 +49,7 @@ public class UserRepositoryTest {
     @Test
     public void shouldSaveUser() {
         final long id = 99L;
-        final User user = new User(id, "fourth", "fourth");
+        final User user = new User(id, "fourth", "fourth", 25);
 
         userRepository.saveAndFlush(user);
 
@@ -72,7 +72,7 @@ public class UserRepositoryTest {
 
     @Test
     public void shouldDeleteUser() {
-        final User user = new User(USER_ID_TEST, "first", "first");
+        final User user = new User(USER_ID_TEST, "first", "first", 25);
 
         userRepository.delete(user);
 

@@ -4,8 +4,17 @@ public class RegistrationRequest {
 
     private String username;
     private String password;
+    private Integer age;
 
     public RegistrationRequest() {
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
     }
 
     public String getUsername() {

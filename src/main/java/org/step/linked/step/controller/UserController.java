@@ -42,7 +42,7 @@ public class UserController {
 
     @PostMapping
     public RegistrationResponse saveNewUser(@RequestBody RegistrationRequest request) {
-        User user = new User(null, request.getUsername(), request.getPassword());
+        User user = new User(null, request.getUsername(), request.getPassword(), request.getAge());
 
         User savedUser = userCrudService.save(user);
 
@@ -64,7 +64,7 @@ public class UserController {
     @DeleteMapping("/{id}")
     public String deleteUserById(@PathVariable(name = "id") String id) {
         final long userId = Long.parseLong(id);
-        userCrudService.delete(userId);
+        userCrudService.deleteById(userId);
         return "User deleted";
     }
 
@@ -72,7 +72,8 @@ public class UserController {
     public UserDTO updateUser(@PathVariable(name = "id") String id,
                               @RequestBody UpdateRequest request) {
         final long userId = Long.parseLong(id);
-        User user = userCrudService.update(userId, request);
+        User toUpdate = new User(null, request.getUsername(), null, null);
+        User user = userCrudService.update(userId, toUpdate);
         return UserDTO.toDTO(user);
     }
 }

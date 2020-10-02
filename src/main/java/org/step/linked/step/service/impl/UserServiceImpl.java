@@ -3,10 +3,10 @@ package org.step.linked.step.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.step.linked.step.dto.request.UpdateRequest;
 import org.step.linked.step.entity.User;
 import org.step.linked.step.repository.UserRepository;
 import org.step.linked.step.service.CrudService;
+import org.step.linked.step.util.DbHelper;
 
 import java.util.List;
 
@@ -14,21 +14,19 @@ import java.util.List;
 public class UserServiceImpl implements CrudService<User, Long> {
 
     private final UserRepository userRepository;
+    private final DbHelper<User> userDbHelper;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository,
+                           DbHelper<User> userDbHelper) {
         this.userRepository = userRepository;
+        this.userDbHelper = userDbHelper;
     }
 
     @Override
     @Transactional
     public User save(User user) {
-        Long id = userRepository.findMaxId();
-        if (id == null) {
-            id = 1L;
-        } else {
-            ++id;
-        }
+        Long id = userDbHelper.generateId(userRepository);
         user.setId(id);
         return userRepository.save(user);
     }
@@ -59,7 +57,7 @@ public class UserServiceImpl implements CrudService<User, Long> {
 
     @Override
     @Transactional
-    public User update(Long aLong, UpdateRequest request) {
+    public User update(Long aLong, User request) {
 //        User user = userRepository.findById(aLong)
 //                .orElseThrow(RuntimeException::new);
 //
@@ -78,7 +76,7 @@ public class UserServiceImpl implements CrudService<User, Long> {
 
     @Override
     @Transactional
-    public void delete(Long id) {
+    public void deleteById(Long id) {
         userRepository.deleteById(id);
     }
 }
