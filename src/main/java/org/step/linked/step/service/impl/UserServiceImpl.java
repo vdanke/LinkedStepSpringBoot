@@ -58,6 +58,10 @@ public class UserServiceImpl implements CrudService<User, Long> {
     @Override
     @Transactional
     public User update(Long aLong, User request) {
+        /*
+        Hibernate вытаскивае сущность по id и ложит ее в PersistenceContext
+        Hibernate валидирует изменения и производит update только по изменившимся полям
+         */
         User user = userRepository.findById(aLong)
                 .orElseThrow(RuntimeException::new);
 

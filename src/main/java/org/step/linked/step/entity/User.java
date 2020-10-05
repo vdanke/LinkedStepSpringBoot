@@ -2,10 +2,7 @@ package org.step.linked.step.entity;
 
 import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
@@ -29,6 +26,9 @@ public class User {
     @Column(name = "age")
     private Integer age;
 
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    private Profile profile;
+
     public User() {
     }
 
@@ -41,6 +41,14 @@ public class User {
 
     public static UserBuilder builder() {
         return new UserBuilder();
+    }
+
+    public Profile getProfile() {
+        return profile;
+    }
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
     }
 
     public Long getId() {

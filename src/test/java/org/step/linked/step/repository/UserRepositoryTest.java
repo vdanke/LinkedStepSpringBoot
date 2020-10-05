@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.step.linked.step.entity.Profile;
 import org.step.linked.step.entity.User;
 
 import java.util.List;
@@ -31,6 +32,9 @@ public class UserRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ProfileRepository profileRepository;
 
     @Test
     public void shouldReturnAllUsers() {
@@ -68,6 +72,8 @@ public class UserRepositoryTest {
 
     @Test
     public void shouldDeleteUserById() {
+        profileRepository.deleteById(USER_ID_TEST);
+
         userRepository.deleteById(USER_ID_TEST);
 
         userRepository.flush();
@@ -85,6 +91,10 @@ public class UserRepositoryTest {
                 .password(USER_DATA_TEST)
                 .age(USER_AGE_TEST)
                 .build();
+
+        final Profile profile = new Profile(1L, "first");
+
+        profileRepository.delete(profile);
 
         userRepository.delete(user);
 

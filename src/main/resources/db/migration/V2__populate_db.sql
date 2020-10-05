@@ -1,3 +1,3 @@
-INSERT INTO USERS VALUES (1, 'first', 'first');
-INSERT INTO USERS VALUES (2, 'second', 'second');
-INSERT INTO USERS VALUES (3, 'third', 'third');
+INSERT INTO USERS VALUES (2, 'first', 'first');
+INSERT INTO USERS VALUES (3, 'second', 'second');
+INSERT INTO USERS VALUES (4, 'third', 'third');
