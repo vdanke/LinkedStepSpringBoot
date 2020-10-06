@@ -8,16 +8,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.step.linked.step.config.UserDetailsImpl;
+import org.step.linked.step.dto.UserCabinetDTO;
 import org.step.linked.step.dto.UserDTO;
-import org.step.linked.step.dto.request.RegistrationRequest;
 import org.step.linked.step.dto.request.UpdateRequest;
-import org.step.linked.step.dto.response.RegistrationResponse;
 import org.step.linked.step.entity.User;
 import org.step.linked.step.service.CrudService;
 
-import java.nio.file.attribute.UserPrincipal;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -62,27 +61,6 @@ public class UserController {
         return dtoListResponseEntity;
     }
 
-    @PostMapping
-    public ResponseEntity<RegistrationResponse> saveNewUser(@RequestBody RegistrationRequest request) {
-        User user = User.builder()
-                .username(request.getUsername())
-                .password(request.getPassword())
-                .age(request.getAge())
-                .build();
-
-        User savedUser = userCrudService.save(user);
-
-        RegistrationResponse registrationResponse = new RegistrationResponse(
-                savedUser.getId(), savedUser.getUsername()
-        );
-
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", "new user")
-                .body(registrationResponse);
-    }
-
     @GetMapping("/{id}")
     public UserDTO findUserById(@PathVariable(name = "id") String id) {
         final long userId = Long.parseLong(id);
@@ -104,24 +82,25 @@ public class UserController {
 
     @PutMapping("/{id}")
     public UserDTO updateUser(@PathVariable(name = "id") String id,
-                              @RequestBody UpdateRequest request) {
+                              @Valid @RequestBody UpdateRequest request) {
         final long userId = Long.parseLong(id);
         User toUpdate = User.builder().username(request.getUsername()).build();
         User user = userCrudService.update(userId, toUpdate);
         return UserDTO.toDTO(user);
     }
 
+    // UserDetails -> org.springframework.**.User = UserDetailsImpl
     @GetMapping("/cabinet")
-    public UserDTO showUserInSecuritySession(@AuthenticationPrincipal UserDetails userDetails) {
+    public UserCabinetDTO showUserInSecuritySession(@AuthenticationPrincipal UserDetailsImpl userDetails) {
 //        Authentication authentication = getAuthentication();
 //
 //        UserDetails principal = (UserDetails) authentication.getPrincipal();
 //
 //        return new UserDTO(null, principal.getUsername());
-        return new UserDTO(null, userDetails.getUsername());
+        return UserCabinetDTO.toUserCabinetDTO(userDetails);
     }
 
-    private Authentication getAuthentication() {
-        return SecurityContextHolder.getContext().getAuthentication();
-    }
+//    private Authentication getAuthentication() {
+//        return SecurityContextHolder.getContext().getAuthentication();
+//    }
 }

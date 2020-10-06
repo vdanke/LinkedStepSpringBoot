@@ -1,37 +1,49 @@
 package org.step.linked.step.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.cors.CorsConfiguration;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Value("${admin.username}")
-    private String username;
-    @Value("${admin.password}")
-    private String password;
+//    @Value("${admin.username}")
+//    private String username;
+//    @Value("${admin.password}")
+//    private String password;
 
     private final PasswordEncoder passwordEncoder;
+    private final UserDetailsService userDetailsService;
 
     @Autowired
-    public SecurityConfig(PasswordEncoder passwordEncoder) {
+    public SecurityConfig(PasswordEncoder passwordEncoder,
+                          @Qualifier("userServiceImpl") UserDetailsService userDetailsService) {
         this.passwordEncoder = passwordEncoder;
+        this.userDetailsService = userDetailsService;
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//        auth
+//                .inMemoryAuthentication()
+//                .withUser(username)
+//                .password(passwordEncoder.encode(password))
+//                .roles("ADMIN");
         auth
-                .inMemoryAuthentication()
-                .withUser(username)
-                .password(passwordEncoder.encode(password))
-                .roles("ADMIN");
+                .userDetailsService(userDetailsService)
+                .passwordEncoder(passwordEncoder);
     }
 
     @Override
@@ -41,6 +53,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .antMatchers(HttpMethod.GET, "/api/v1/profiles/public").permitAll() // дать разрешение всем
                 .antMatchers("/api/v1/public/**")
                 .permitAll() // дать разрешение любым урлам после /api/v1/public/
+                .antMatchers(HttpMethod.POST, "/api/v1/authentication/*")
+                .permitAll()
                 .anyRequest() // все запросы
                 .authenticated() // должны быть аутентифицированы
                 .and() // и
@@ -48,6 +62,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and() // и
                 .logout() // логаут /logout
                 .and() // и
-                .httpBasic(); // http 1.1
+                .httpBasic() // http 1.1
+                .and()
+                .cors(httpSecurityCorsConfigurer -> {
+                    CorsConfiguration corsConfiguration = new CorsConfiguration();
+
+                    corsConfiguration.setAllowedHeaders(Collections.singletonList("*"));
+                    corsConfiguration.setAllowedOrigins(Collections.singletonList("*"));
+                    corsConfiguration.setAllowedMethods(Collections.singletonList("*"));
+                    corsConfiguration.setAllowCredentials(true);
+                    corsConfiguration.setMaxAge(3600L);
+                })
+                .csrf()
+                .disable();
     }
+
+
 }

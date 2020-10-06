@@ -28,11 +28,7 @@ public class ProfileController {
     public ResponseEntity<List<ProfileDTOFull>> getFullDescription() {
         List<ProfileDTOFull> profileDTOFulls = profileCrudService.findAll()
                 .stream()
-                .map(pr -> {
-                    ProfileDTOFull profileDTOFull = new ProfileDTOFull();
-                    profileDTOFull.description = pr.getDescription();
-                    return profileDTOFull;
-                })
+                .map(ProfileDTOFull::toProfileDTOFull)
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(profileDTOFulls);
