@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.step.linked.step.config.UserDetailsImpl;
 import org.step.linked.step.entity.User;
+import org.step.linked.step.exception.UserNotFoundException;
 import org.step.linked.step.repository.UserRepository;
 import org.step.linked.step.service.CrudService;
 import org.step.linked.step.util.DbHelper;
@@ -52,13 +53,17 @@ public class UserServiceImpl implements CrudService<User, Long>, UserDetailsServ
     @Override
     @Transactional(readOnly = true)
     public User findById(Long id) {
-        return userRepository.findById(id).orElseThrow(RuntimeException::new);
+        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(
+                String.format("User with ID %d not found", id), id
+        ));
     }
 
     @Override
     @Transactional(readOnly = true)
     public User find(User user) {
-        return userRepository.findById(user.getId()).orElseThrow(RuntimeException::new);
+        return userRepository.findById(user.getId()).orElseThrow(() -> new UserNotFoundException(
+                String.format("User with ID %d not found", user.getId()), user.getId()
+        ));
     }
 
     @Override

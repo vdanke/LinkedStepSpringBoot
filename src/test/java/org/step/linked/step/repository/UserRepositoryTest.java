@@ -10,6 +10,8 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.step.linked.step.entity.Profile;
 import org.step.linked.step.entity.User;
+import org.step.linked.step.exception.UserNotFoundException;
+import org.step.linked.step.util.DbHelper;
 
 import java.util.List;
 import java.util.Optional;
@@ -103,5 +105,16 @@ public class UserRepositoryTest {
         Optional<User> byId = userRepository.findById(USER_ID_TEST);
 
         Assertions.assertFalse(byId.isPresent());
+    }
+
+    @Test
+    public void shouldReturnNextId() {
+        Long id = userRepository.findTopByOrderByIdDesc().getId();
+        Long aLong = ++id;
+
+        Assertions.assertThrows(
+                UserNotFoundException.class,
+                () -> userRepository.findById(aLong).orElseThrow(UserNotFoundException::new)
+        );
     }
 }

@@ -62,20 +62,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and() // и
                 .logout() // логаут /logout
                 .and() // и
-                .httpBasic() // http 1.1
+                .httpBasic()
                 .and()
                 .cors(httpSecurityCorsConfigurer -> {
                     CorsConfiguration corsConfiguration = new CorsConfiguration();
 
-                    corsConfiguration.setAllowedHeaders(Collections.singletonList("*"));
-                    corsConfiguration.setAllowedOrigins(Collections.singletonList("*"));
-                    corsConfiguration.setAllowedMethods(Collections.singletonList("*"));
+                    corsConfiguration.setAllowedHeaders(Arrays.asList(
+//                            "Authorization", "Description", "Content-Type"
+                            "*"
+                    ));
+                    corsConfiguration.setAllowedOrigins(Arrays.asList(
+//                            "127.0.0.1", "http://super.server.com"
+                            "*"
+                    ));
+                    corsConfiguration.setAllowedMethods(Arrays.asList(
+//                            "POST", "GET", "PUT", "DELETE" // HEADER, OPTION...
+                            "*"
+                    ));
                     corsConfiguration.setAllowCredentials(true);
                     corsConfiguration.setMaxAge(3600L);
                 })
                 .csrf()
                 .disable();
     }
-
-
 }
