@@ -17,7 +17,7 @@ import org.step.linked.step.util.DbHelper;
 import java.util.List;
 
 @Service
-public class UserServiceImpl implements CrudService<User, Long>, UserDetailsService {
+public class UserServiceImpl implements CrudService<User, Long> {
 
     private final UserRepository userRepository;
     private final DbHelper<User> userDbHelper;
@@ -91,31 +91,5 @@ public class UserServiceImpl implements CrudService<User, Long>, UserDetailsServ
     @Transactional
     public void deleteById(Long id) {
         userRepository.deleteById(id);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(
-                        String.format("User with username %s doesn't exists", username))
-                );
-
-//        Set<SimpleGrantedAuthority> authorities = user.getRoles()
-//                .stream()
-//                .map(Role::name)
-//                .map(SimpleGrantedAuthority::new)
-//                .collect(Collectors.toSet());
-
-//        return new org.springframework.security.core.userdetails.User(
-//                user.getUsername(),
-//                user.getPassword(),
-//                true, // аккаунт активный
-//                true, // аккаунт не просрочен
-//                true, // пароль от аккаунта не просрочен
-//                true, // аккаунт не заблокирован
-//                user.getRoles()
-//        );
-        return new UserDetailsImpl(user);
     }
 }

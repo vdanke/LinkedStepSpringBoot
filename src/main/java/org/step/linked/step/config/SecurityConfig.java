@@ -29,7 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public SecurityConfig(PasswordEncoder passwordEncoder,
-                          @Qualifier("userServiceImpl") UserDetailsService userDetailsService) {
+                          @Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService) {
         this.passwordEncoder = passwordEncoder;
         this.userDetailsService = userDetailsService;
     }
