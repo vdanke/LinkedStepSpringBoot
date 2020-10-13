@@ -10,10 +10,38 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @ComponentScan
 public class EncodeConfig {
 
+    @Configuration
+    private static class InnerConfig {
+
+        public InnerConfig() {
+        }
+
+        @Bean
+        A a() {
+            return new A();
+        }
+
+        @Bean
+        B b() {
+            return new B();
+        }
+    }
+
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    public PasswordEncoder passwordEncoder(InnerConfig innerConfig) {
         final int strength = 8;
 
+        A a = innerConfig.a();
+        B b = innerConfig.b();
+
         return new BCryptPasswordEncoder(strength);
+    }
+
+    private static class A {
+
+    }
+
+    private static class B {
+
     }
 }
